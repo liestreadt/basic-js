@@ -1,10 +1,10 @@
-// const { NotImplementedError } = require('../extensions/index.js');
+const { NotImplementedError } = require('../extensions/index.js');
 
 /**
- * Given an array of domains, return the object with the appearances of the DNS.
+ * Given an array of domains, return the resultect with the appearances of the DNS.
  *
  * @param {Array} domains
- * @return {Object}
+ * @return {resultect}
  *
  * @example
  * domains = [
@@ -23,44 +23,28 @@
  *
  */
 function getDNSStats(domains) {
-  const uniqueArrs = [];
-  const Strings = []
-  const arr = domains.map(item => [item = item.split('.').join('.'), 0]);
-  const result = Object.fromEntries(new Map(arr));
-  result['.ru'] = 0;
-  const allFilters = domains.map(item => {
-    console.log(item);
-    return [item.match(/[a-z]+\.[a-z]+\.[a-z]+/ig), item.match(/\.*[a-z]+\.[a-z]+/ig), item.match(/\.[a-z]+$/ig)]
-  });
-
-  allFilters.map(item => uniqueArrs.push(...item));
-  uniqueArrs.filter(elem => elem).map(item => Strings.push(...item));
-  const uniqueStrings = Array.from(new Set(Strings));
-
-  uniqueStrings.forEach(elem => {
-    domains.forEach(i => {
-      console.log('tsest');
-      new RegExp(elem).test(i)
-      ?
-      new RegExp(/.ru/).test(elem) ? result[i.match(new RegExp(elem))[0]]++ : ''
-      :
-      '';
-    })
+  let domainsArr = [];
+  let result = {};
+  domains.forEach(elem => {
+    elem = elem.split('.').reverse();
+    let tempArray = [];
+    let tempString = '';
+    for (let i = 0; i < elem.length; i++) {
+      tempArray.push(elem[i]);
+      tempString = tempArray.join('.');
+      domainsArr.push(tempString);
+    }
   })
-
-  const tempResult = Object.keys(result).map(key => {
-    let reverseItem = '.' + key.split('.').reverse().join('.');
-    return reverseItem === '.ru.' ? [key, reverseItem = reverseItem.split('').slice(0,3).join('')] : [key, reverseItem];
+  domainsArr.forEach(elem => {
+    if (!result.hasOwnProperty('.' + elem)) {
+      result['.' + elem] = 1;
+    } else {
+      result['.' + elem]++;
+    }
   });
-  const properResult = Object.fromEntries(new Map(tempResult));
-  return Object.keys(result).map(key => {
-    const newKey = properResult[key] || key;
-    return { [newKey] : result[key] };
-  }).reduce((a, b) => Object.assign({}, a, b));
+  return result;
 }
 
-console.log(getDNSStats(['epam.com']));
-
-// module.exports = {
-//   getDNSStats
-// };
+module.exports = {
+  getDNSStats
+};

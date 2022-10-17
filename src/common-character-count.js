@@ -21,7 +21,6 @@ function getCommonCharacterCount(s1, s2) {
       arr.splice(c, 1);
     }
   }
-
   const lenTwo = arr.length;
   return lenOne - lenTwo
 }
